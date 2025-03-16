@@ -33,9 +33,16 @@ export class TransformContext {
 
 function visitStatement(context: TransformContext, node: ts.Statement): ts.Statement | ts.Statement[] {
   const { factory } = context;
-  const sourceFile = node.getSourceFile();
-  if (sourceFile === undefined)
-    return node;
+  const sourceFile = getSourceFile(node);
+  if (sourceFile === undefined) {
+    const diagnostic = ts.createDiagnosticForNode(node, {
+      key: "", code: 400,
+      category: ts.DiagnosticCategory.Warning,
+      message: `Failed to find source file for ${node.kind} node`
+    });
+    context.context.addDiagnostic(diagnostic);
+    return [];
+  }
 
   const nodeStartLine = sourceFile.getLineAndCharacterOfPosition(node.getStart()).line;
   return [
@@ -72,4 +79,19 @@ function visitNode(context: TransformContext, node: ts.Node): ts.Node | ts.Node[
   // We encountered a node that we don't handle above,
   // but we should keep iterating the AST in case we find something we want to transform.
   return context.transform(node);
+}
+
+function getSourceFile(node: ts.Node, checkParent = true): ts.SourceFile | undefined {
+  if (node.parent === undefined)
+    return getDescendants(node).map(c => getSourceFile(c, false)).filter(v => v !== undefined)[0];
+
+  return node.getSourceFile() ?? (checkParent ? getSourceFile(node.parent) : undefined);
+}
+
+function getDescendants(node: ts.Node): ts.Node[] {
+  const children = node.getChildren();
+  return [
+    ...children,
+    ...children.map(getDescendants).flat()
+  ]
 }
