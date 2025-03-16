@@ -13,8 +13,10 @@ export default function (program: ts.Program, config: TransformerConfig) {
     const context = new TransformContext(program, transformationContext, config);
     const { factory } = context;
     return file => {
-      const ignoredPaths = globSync(config.ignoreGlobs);
-      if (ignoredPaths.includes(path.join(path.normalize(file.path))))
+      const root = path.normalize(path.dirname(__dirname));
+      const ignoredPaths = globSync(config.ignoreGlobs).map(p => path.relative(p, root));
+      const filePath = path.relative(path.join(path.normalize(file.path)), root);
+      if (ignoredPaths.includes(filePath))
         return file;
 
       const transformed = context.transform(file);
