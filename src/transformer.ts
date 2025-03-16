@@ -32,6 +32,9 @@ export class TransformContext {
 }
 
 function visitStatement(context: TransformContext, node: ts.Statement): ts.Statement | ts.Statement[] {
+  if (ts.isReturnStatement(node) || ts.isContinueStatement(node) || ts.isBreakStatement(node))
+    return node;
+
   const { factory } = context;
   const sourceFile = getSourceFile(node);
   if (sourceFile === undefined) {
