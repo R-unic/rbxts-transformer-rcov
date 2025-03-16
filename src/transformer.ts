@@ -4,7 +4,7 @@ import ts from "typescript";
  * This is the transformer's configuration, the values are passed from the tsconfig.
  */
 export interface TransformerConfig {
-  _: void;
+  ignoreGlobs: string[];
 }
 
 /**

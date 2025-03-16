@@ -29,5 +29,8 @@
   },
   "files": [
     "out"
-  ]
+  ],
+  "dependencies": {
+    "glob": "^11.0.1"
+  }
 }
