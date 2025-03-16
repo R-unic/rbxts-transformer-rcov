@@ -27,7 +27,7 @@ export class TransformContext {
    * Transforms the children of the specified node.
    */
   transform<T extends ts.Node>(node: T): T {
-    return ts.visitEachChild(node, (node) => visitNode(this, node), this.context);
+    return ts.visitEachChild(node, node => visitNode(this, node), this.context);
   }
 }
 
@@ -41,7 +41,7 @@ function visitStatement(context: TransformContext, node: ts.Statement): ts.State
       message: `Failed to find source file for ${node.kind} node`
     });
     context.context.addDiagnostic(diagnostic);
-    return [];
+    return node;
   }
 
   const nodeStartLine = sourceFile.getLineAndCharacterOfPosition(node.getStart()).line;
