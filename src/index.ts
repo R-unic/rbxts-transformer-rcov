@@ -34,20 +34,27 @@ export default function (program: ts.Program, config: TransformerConfig) {
       const totalLines = file.getLineAndCharacterOfPosition(lastStatement.getEnd()).line - emptyLines.length;
       return factory.updateSourceFile(
         transformed,
-        [...transformed.statements,
-        factory.createExpressionStatement(
-          factory.createCallExpression(
-            factory.createPropertyAccessExpression(
-              factory.createIdentifier("rcov"),
-              factory.createIdentifier("totalLines"),
-            ),
+        [
+          factory.createImportDeclaration(
             undefined,
-            [
-              factory.createStringLiteral(file.fileName),
-              factory.createNumericLiteral(totalLines)
-            ]
+            factory.createImportClause(false, factory.createIdentifier("rcov"), undefined),
+            factory.createStringLiteral("@rbxts/rcov"),
+            undefined
+          ),
+          ...transformed.statements,
+          factory.createExpressionStatement(
+            factory.createCallExpression(
+              factory.createPropertyAccessExpression(
+                factory.createIdentifier("rcov"),
+                factory.createIdentifier("totalLines"),
+              ),
+              undefined,
+              [
+                factory.createStringLiteral(file.fileName),
+                factory.createNumericLiteral(totalLines)
+              ]
+            )
           )
-        )
         ]
       );
     }
