@@ -14,7 +14,10 @@ export default function (program: ts.Program, config: TransformerConfig) {
     const { factory } = context;
     return file => {
       const root = path.normalize(path.dirname(__dirname));
-      const ignoredPaths = globSync(config.ignoreGlobs).map(p => path.normalize(path.relative(root, p)));
+      const ignoredPaths = config.ignoreGlobs !== undefined
+        ? globSync(config.ignoreGlobs).map(p => path.normalize(path.relative(root, p)))
+        : [];
+
       const filePath = path.normalize(path.relative(root, path.join(path.normalize(file.path))));
       if (ignoredPaths.includes(filePath))
         return file;
