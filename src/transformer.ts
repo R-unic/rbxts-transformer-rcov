@@ -34,8 +34,10 @@ export class TransformContext {
 function visitStatement(context: TransformContext, node: ts.Statement): ts.Statement | ts.Statement[] {
   const { factory } = context;
   const sourceFile = node.getSourceFile();
-  const nodeStartLine = sourceFile.getLineAndCharacterOfPosition(node.getStart()).line;
+  if (sourceFile === undefined)
+    return node;
 
+  const nodeStartLine = sourceFile.getLineAndCharacterOfPosition(node.getStart()).line;
   return [
     context.transform(node),
     factory.createExpressionStatement(
