@@ -52,7 +52,7 @@ function visitStatement(context: TransformContext, node: ts.Statement): ts.State
 
   const nodeStartLine = sourceFile.getLineAndCharacterOfPosition(node.pos).line;
   return [
-    context.transform(node),
+    node,
     factory.createExpressionStatement(
       factory.createCallExpression(
         factory.createPropertyAccessExpression(
