@@ -24,6 +24,9 @@ export default function (program: ts.Program, config: TransformerConfig) {
 
       const transformed = context.transform(file);
       const lastStatement = getLastStatement(transformed.statements);
+      if (lastStatement === undefined)
+        return transformed;
+
       const emptyLines = transformed.text.split("\n").filter(line => line.trim() === "");
       const totalLines = file.getLineAndCharacterOfPosition(lastStatement.getEnd()).line - emptyLines.length;
 
