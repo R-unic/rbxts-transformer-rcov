@@ -69,7 +69,7 @@ function visitStatement(context: TransformContext, node: ts.Statement): ts.State
       )
     ];
   } catch {
-    return context.transform(node);
+    return node;
   }
 }
 
@@ -114,6 +114,7 @@ function visitFunctionLikeDeclaration(context: TransformContext, node: ts.Functi
 }
 
 function visitNode(context: TransformContext, node: ts.Node): ts.Node | ts.Node[] {
+  console.log(ts.SyntaxKind[node.kind], ts.isStatement(node), ts.isExpressionStatement(node))
   if (ts.isStatement(node))
     return visitStatement(context, node);
   else if (ts.isExpression(node))
