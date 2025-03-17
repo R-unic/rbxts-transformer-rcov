@@ -50,23 +50,27 @@ function visitStatement(context: TransformContext, node: ts.Statement): ts.State
     return node;
   }
 
-  const nodeStartLine = sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile)).line;
-  return [
-    node,
-    factory.createExpressionStatement(
-      factory.createCallExpression(
-        factory.createPropertyAccessExpression(
-          factory.createIdentifier("rcov"),
-          factory.createIdentifier("track")
-        ),
-        undefined,
-        [
-          factory.createStringLiteral(sourceFile.fileName),
-          factory.createNumericLiteral(nodeStartLine + 1),
-        ]
+  try {
+    const nodeStartLine = sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile)).line;
+    return [
+      node,
+      factory.createExpressionStatement(
+        factory.createCallExpression(
+          factory.createPropertyAccessExpression(
+            factory.createIdentifier("rcov"),
+            factory.createIdentifier("track")
+          ),
+          undefined,
+          [
+            factory.createStringLiteral(sourceFile.fileName),
+            factory.createNumericLiteral(nodeStartLine + 1),
+          ]
+        )
       )
-    )
-  ];
+    ];
+  } catch {
+    return node;
+  }
 }
 
 function visitExpression(context: TransformContext, node: ts.Expression): ts.Expression {
