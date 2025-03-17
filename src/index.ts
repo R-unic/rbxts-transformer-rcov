@@ -12,6 +12,7 @@ export default function (program: ts.Program, config: TransformerConfig) {
   return (transformationContext: ts.TransformationContext): ((file: ts.SourceFile) => ts.SourceFile) => {
     const context = new TransformContext(program, transformationContext, config);
     const { factory } = context;
+
     return file => {
       const root = path.normalize(path.dirname(__dirname));
       const ignoredPaths = config.ignoreGlobs !== undefined
@@ -19,14 +20,11 @@ export default function (program: ts.Program, config: TransformerConfig) {
         : [];
 
       const filePath = path.normalize(path.relative(root, path.join(path.normalize(file.path))));
-      if (ignoredPaths.includes(filePath))
+      if (ignoredPaths.includes(filePath) || file.statements.length === 0)
         return file;
 
       const transformed = context.transform(file);
       const lastStatement = getLastStatement(transformed.statements);
-      if (lastStatement === undefined)
-        return transformed;
-
       const emptyLines = transformed.text.split("\n").filter(line => line.trim() === "");
       const totalLines = file.getLineAndCharacterOfPosition(lastStatement.getEnd()).line - emptyLines.length;
 
