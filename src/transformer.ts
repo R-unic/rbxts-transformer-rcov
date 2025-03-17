@@ -53,7 +53,7 @@ function visitStatement(context: TransformContext, node: ts.Statement): ts.State
   try {
     const nodeStartLine = sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile)).line;
     return [
-      node,
+      context.transform(node),
       factory.createExpressionStatement(
         factory.createCallExpression(
           factory.createPropertyAccessExpression(
@@ -77,7 +77,8 @@ function visitExpression(context: TransformContext, node: ts.Expression): ts.Exp
   // This can be used to transform expressions
   // For example, a call expression for macros.
 
-  return context.transform(node);
+  // return context.transform(node);
+  return node;
 }
 
 function visitBlock(context: TransformContext, node: ts.Block): ts.Block {
@@ -94,7 +95,7 @@ function visitFunctionLikeDeclaration(context: TransformContext, node: ts.Functi
       newBody = visitBlock(context, factory.createBlock([factory.createExpressionStatement(node.body)]));
 
   if (node.body === newBody)
-    return node;
+    return context.transform(node);
 
   if (ts.isFunctionDeclaration(node))
     return factory.updateFunctionDeclaration(node, node.modifiers, node.asteriskToken, node.name, node.typeParameters, node.parameters, node.type, newBody);
