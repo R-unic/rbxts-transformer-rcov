@@ -50,7 +50,7 @@ function visitStatement(context: TransformContext, node: ts.Statement): ts.State
     return node;
   }
 
-  const nodeStartLine = sourceFile.getLineAndCharacterOfPosition(node.pos).line;
+  const nodeStartLine = sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile)).line;
   return [
     node,
     factory.createExpressionStatement(
