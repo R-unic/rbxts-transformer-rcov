@@ -69,7 +69,7 @@ function visitStatement(context: TransformContext, node: ts.Statement): ts.State
       )
     ];
   } catch {
-    return node;
+    return context.transform(node);
   }
 }
 

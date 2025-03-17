@@ -1,6 +1,6 @@
 {
   "name": "rbxts-transformer-rcov",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "Transformer for rcov to track line execution - depends on @rbxts/rcov being installed",
   "main": "out/index.js",
   "author": "runicly",
