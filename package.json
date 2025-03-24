@@ -15,7 +15,7 @@
   "scripts": {
     "prepare": "npm run build",
     "build": "tsc",
-    "watch": "tsc -w"
+    "dev": "tsc -w"
   },
   "devDependencies": {
     "@types/node": "^18.18.6",

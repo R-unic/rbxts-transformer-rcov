@@ -59,7 +59,7 @@ function trackLineCount(factory: ts.NodeFactory, file: ts.SourceFile, totalLines
       undefined,
       [
         factory.createStringLiteral(file.fileName),
-        factory.createNumericLiteral(totalLines)
+        factory.createNumericLiteral(totalLines < 0 ? 0 : totalLines)
       ]
     )
   );
